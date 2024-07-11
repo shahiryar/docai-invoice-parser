@@ -8,6 +8,13 @@ app = Flask(__name__)
 
 @app.route('/ping', methods=['GET'])
 def ping():
+    """
+    This function is a simple endpoint to check if the server is running.
+
+    Returns:
+        jsonify({'msg': 'pong!'}): A JSON response with the message 'pong!'.
+        200: HTTP status code indicating success.
+    """
     print("hi")
     return jsonify({'msg': 'pong!'}), 200
 
@@ -18,6 +25,20 @@ def process_document_sample(
     mime_type: str,
     processor_version_id: Optional[str] = None,
 ):
+    """
+    Processes a document using Google Cloud Document AI.
+
+    Args:
+        file: The file to be processed.
+        mime_type: The MIME type of the file.
+        processor_version_id: The ID of the processor version to use. If not provided, the default processor version will be used.
+
+    Returns:
+        A dictionary containing the extracted entities from the document.
+
+    Raises:
+        Exception: If an error occurs during processing.
+    """
     project_id = "ace-fa-space-424110"
     location = "us"
     processor_id = "e3e87fb41a83ffb9"
@@ -75,6 +96,16 @@ def process_document_sample(
 # Endpoint to receive an image
 @app.route('/process', methods=['POST'])
 def upload_image():
+    """
+    Handles the upload of an image file and processes it using Document AI.
+
+    Returns:
+        jsonify(respose): A JSON response containing the extracted entities from the document.
+        200: HTTP status code indicating success.
+        jsonify({'error': 'No file part in the request'}), 400: Error response if no file is provided.
+        jsonify({'error': 'No selected file'}), 400: Error response if no file is selected.
+        jsonify({'error': 'Upload failed'}), 500: Error response if the upload fails.
+    """
     # Check if a file was uploaded
     if 'file' not in request.files:
         return jsonify({'error': 'No file part in the request'}), 400
